@@ -1,0 +1,77 @@
+---
+title: " Tooth Growth Data Inferential Analysis"
+author: "Shivam Giri"
+date: "August 30, 2017"
+output: pdf_document
+---
+## Data Preprocessing 
+```{r setup}
+library(datasets)
+data("ToothGrowth")
+
+```
+
+
+## Exploratory Data Analysis
+```{r}
+
+str(ToothGrowth)
+summary(ToothGrowth)
+levels(ToothGrowth$supp)<-c("Orange juice","Vitamin C")
+
+library(ggplot2)
+
+ggplot(data = ToothGrowth,aes(x=factor(dose),len,fill=factor(dose)))+geom_boxplot()+facet_grid(facets = .~supp)+labs(title="Tooth Growth Variation",x="Dose",y="Tooth Length")
+```
+
+## Statistical Tests and Inference
+
+### Hypothesis 1
+Both Orange Juice and Vitamin C enables equal tooth growth for all doses
+```{r}
+hypo1<-t.test(len~supp,ToothGrowth)
+hypo1$conf.int
+hypo1$p.value
+
+```
+The confidence intervals include 0 and the p-value is greater than the threshold of 0.05. The null hypothesis cannot be rejected.
+
+
+
+### Hypothesis 2
+Both Orange Juice and Vitamin C enables equal tooth growth for dose = 0.5 mg/day
+```{r}
+hypo2<-t.test(len~supp,ToothGrowth,dose==0.5)
+hypo2$conf.int
+hypo2$p.value
+```
+The confidence interval does not include 0 and the p-value is below the 0.05 threshold. The null hypothesis can be rejected.
+
+
+### Hypothesis 3
+Both Orange Juice and Vitamin C enables equal tooth growth for dose = 1.0 mg/day
+```{r}
+hypo3<-t.test(len~supp,ToothGrowth,dose==1.0)
+hypo3$conf.int
+hypo3$p.value
+```
+The confidence interval does not include 0 and the p-value is smaller than the 0.05 threshold. The null hypothesis can be rejected. 
+
+
+
+### Hypothesis 4
+Both Orange Juice and Vitamin C enables equal tooth growth for dose = 2.0 mg/day
+```{r}
+hypo4<-t.test(len~supp,ToothGrowth,dose==2.0)
+hypo4$conf.int
+hypo4$p.value
+```
+The confidence interval does include 0 and the p-value is larger than the 0.05 threshold. The null hypothesis cannot be rejected.
+
+
+
+## Conclusion
+AS evident from above hypotheses, for dosages of 0.5 and 1.0 mg/day, tooth growth occurs more in the case of Orange Juice than Vitamin C.
+
+In the case of dose of 2.0 mg/day, equal tooth growth can be said to be achieved with p-value equal to 0.96
+

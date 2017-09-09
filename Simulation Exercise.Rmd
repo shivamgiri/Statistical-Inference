@@ -1,0 +1,60 @@
+---
+title: "Simulation Exercise : Statistical Inference"
+author: "Shivam Giri"
+date: "August 30, 2017"
+output: pdf_document
+---
+## Overview
+In this project we will investigate the exponential distribution in R and compare it with the Central Limit Theorem. The mean of exponential distribution is 1/lambda and the standard deviation is also 1/lambda. We will use lambda = 0.2 for all of the simulations. We will investigate the distribution of averages of 40 exponentials and that we will need to do a thousand simulations. 
+
+## Simulations
+```{r}
+set.seed(12345)
+lambda<-0.2
+simulations<-1000
+n<-40
+sampledata<-NULL
+for(i in 1:1000){
+  sampledata<-c(sampledata,mean(rexp(n,lambda)))
+}
+
+
+```
+
+
+## Sample Mean versus Theoretical Mean
+```{r}
+sampleMean<-mean(sampledata)
+
+TheorMean<-1/lambda
+
+table(sampleMean,TheorMean)
+
+```
+
+
+## Sample Variance versus Theoretical Variance
+```{r}
+sampleVariance<-var(sampledata)
+
+TheorVar<-1/(lambda*sqrt(n))^2
+
+table(sampleVariance,TheorVar)
+```
+
+
+
+## Distribution
+```{r}
+library(ggplot2)
+sampledata<-as.data.frame(sampledata)
+
+ggplot(sampledata,aes(x=sampledata,y=..density..))+geom_histogram(binwidth = lambda, fill="blue") + geom_density(method="lm",aes(fill=""))+
+labs(title="Sample Distribution Plot",x="Sample means",y="Frequency")+
+geom_vline(xintercept=TheorMean)+
+geom_text(aes(x=TheorMean,y=.75),label="Theoretical Mean",hjust=1)
+
+```
+
+## Conclusion
+On plotting the simulated means along with theoretical mean, we can easily figure out that the simulated mean is very close to theoretical mean. The distribution takes the shape as of a bell around the sample mean and hence that of a normal distribution. 
